@@ -7,6 +7,12 @@
 #include "version.h"
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
+struct StatTickerParams {
+	uintptr_t Receiver;
+	uintptr_t Victim;
+	uintptr_t StatEvent;
+};
+
 
 class RLKillAnnouncer: public BakkesMod::Plugin::BakkesModPlugin/*, public BakkesMod::Plugin::PluginSettingsWindow*//*, public BakkesMod::Plugin::PluginWindow*/
 {
@@ -17,29 +23,9 @@ class RLKillAnnouncer: public BakkesMod::Plugin::BakkesModPlugin/*, public Bakke
 	virtual void onLoad();
 	virtual void onUnload();
 
-	// Inherited via PluginSettingsWindow
-	/*
-	void RenderSettings() override;
-	std::string GetPluginName() override;
-	void SetImGuiContext(uintptr_t ctx) override;
-	*/
-
-	// Inherited via PluginWindow
-	/*
-
-	bool isWindowOpen_ = false;
-	bool isMinimized_ = false;
-	std::string menuTitle_ = "RLKillAnnouncer";
-
-	virtual void Render() override;
-	virtual std::string GetMenuName() override;
-	virtual std::string GetMenuTitle() override;
-	virtual void SetImGuiContext(uintptr_t ctx) override;
-	virtual bool ShouldBlockInput() override;
-	virtual bool IsActiveOverlay() override;
-	virtual void OnOpen() override;
-	virtual void OnClose() override;
-	
-	*/
+	unsigned int combo = 0;
+	unsigned int counter = 0;
+	std::chrono::steady_clock::time_point previousDemoTime;
+	void onStatTickerMessage(ServerWrapper caller, void* params, std::string eventname);
+	void StartGame();
 };
-
